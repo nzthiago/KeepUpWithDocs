@@ -1,0 +1,196 @@
+﻿/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    font-family: 'Segoe UI',SegoeUI,'Segoe WP',Tahoma,Arial,sans-serif !important;
+    color: #505050;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+    background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+    padding: 40px 15px 0;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+code {
+    font-size: 80%;
+}
+
+.navbar {
+    background-color: #fff;
+}
+
+.footer {
+    background-color: #1a1a1a;
+}
+
+    .navbar-dark .navbar-brand, .footer a {
+        color: #00abec;
+    }
+
+h1 a {
+    color: #fff;
+}
+
+    h1 a:hover {
+        color: #00abec;
+        text-decoration:none;
+    }
+
+.list-group {
+    max-width: 800px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #4d545c;
+}
+
+    .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-brand:hover {
+        color: #00abec;
+    }
+
+
+.btn-rss {
+    color: #fff;
+    background-color: #ea8335;
+    border-color: #ea8335;
+    font-size: 1.5em;
+}
+
+    .btn-rss:hover {
+        color: #fff;
+        background-color: #ce732d;
+    }
+
+.header {
+    background-color: #4d545c;
+    color: #fff;
+    margin-bottom: 0;
+    padding-bottom: 1rem;
+}
+
+    .header .display-4 {
+        font-size: 2.5rem;
+    }
+
+.counter {
+    min-width: 10rem;
+    display: inline-block;
+}
+
+    .counter .badge {
+        font-weight: normal;
+    }
+.card-header button {
+    padding-left:0;
+}
+
+h1, h2, h3 {
+    font-weight: 200;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.results {
+    margin-top: 40px;
+}
+
+.linkList {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+    .linkList li {
+        margin-bottom: 12px;
+    }
+
+.explore {
+    padding-right: 0;
+}
+
+.commits .added {
+    color: #28a745;
+}
+
+.commits .deleted {
+    color: #dc3545;
+}
+
+.commits .modified {
+    color: #007bff;
+}
+
+.logo {
+    background-image: url('/assets/images/logo.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.beta {
+    color: #00abec;
+    font-size: 1.5rem;
+}
+
+.paging {
+    text-align: center;
+    padding: 20px 0;
+}
+
+    .paging .current {
+        font-weight: bold;
+    }
+
+@media (max-width: 576px) {
+    .header {
+        margin-top: 30px;
+    }
+
+    .logo {
+        background-position: left bottom;
+    }
+
+    .subscribe {
+        margin-top: 10px;
+        margin-bottom: -30px;
+    }
+
+        .subscribe a {
+            width: 100%;
+        }
+
+    .counter {
+        width: auto;
+    }
+
+    .explore {
+        margin-top: 20px;
+    }
+}

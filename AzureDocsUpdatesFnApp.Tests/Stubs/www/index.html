@@ -1,0 +1,163 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="/assets/custom.css" rel="stylesheet">
+    <title>Microsoft Azure - Documentation Change Feed</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+            <div class="container d-flex justify-content-between">
+                <a class="navbar-brand" href="#">
+                    <img src="/assets/images/Azure_logo_icon.svg" width="30" height="30" class="d-inline-block align-top" alt="Azure">
+                    Microsoft Azure - Documentation Change Feed
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container">
+        <div id="app">
+            {{ message }}
+        </div>
+        <div id="results"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">
+                Community project from <a href="https://twitter.com/_olli_/" target="_blank">@_olli_</a> and <a href="https://twitter.com/RicardoNiepel/" target="_blank">@RicardoNiepel</a>
+            </span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="/assets/app.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <script>
+
+        String.prototype.trimChars = function (c) {
+            var re = new RegExp("^[" + c + "]+|[" + c + "]+$", "g");
+            return this.replace(re, "");
+        }
+
+        function getTitle(sha, changeUrl, $element) {
+            var contentUrl = "https://raw.githubusercontent.com/" + changeUrl.replace("/contents/", "/" + sha + "/")
+            // "https://raw.githubusercontent.com/MicrosoftDocs/azure-docs/cf5c0fd7bc7d217224b7b5a22b704bdbed247be2/articles/active-directory/device-management-hybrid-azuread-joined-devices-setup.md"
+            $.get(contentUrl, function (data) {
+                var lines = data.split('\n');
+
+                for (var i = 0; i < lines.length && i < 5; i++) {
+                    if (lines[i].startsWith("title: ")) {
+                        var title = lines[i]
+                            .replace("title: ", "")
+                            .replace(" | Microsoft Docs", "")
+                            .trimChars('"')
+                            .trimChars("'");
+                        $element.html(title);
+                        break;
+                    }
+                }
+            });
+        }
+
+        function uuidv4() {
+            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            )
+        }
+
+        $(function () {
+            var page = 1;
+
+            $.getJSON("/api/ChangeFeeed?page=" + page, function (data) {
+
+                var items = [];
+                $.each(data, function (key, val) {
+                    var changedAtDate = new Date(Date.parse(val.changedAtDate));
+                    items.push("<h2>" + changedAtDate.toISOString().substring(0, 10) + "</h2>");
+
+                    items.push("<div id=\"accordion\">");
+                    $.each(val.products, function (keyp, product) {
+                        var id = key + "-" + keyp;
+
+                        items.push("<div class=\"card\">");
+
+                        items.push("<div class=\"card-header\">");
+                        items.push("<h5 class=\"mb-0\">");
+                        items.push("<button class=\"btn btn-link\" data-toggle=\"collapse\" data-target=\"#" + id + "\" aria-expanded=\"true\" aria-controls=\"" + id + "\">");
+                        items.push(product.product);
+                        items.push("</button>");
+                        if (product.added > 0) {
+                            items.push("<span class=\"badge badge-success badge-pill\">+" + product.added + "</span>");
+                        }
+                        if (product.deleted) {
+                            items.push("<span class=\"badge badge-danger badge-pill\">-" + product.deleted + "</span>");
+                        }
+                        if (product.modified) {
+                            items.push("<span class=\"badge badge-primary badge-pill\">#" + product.modified + "</span>");
+                        }
+                        items.push("</h5>");
+                        items.push("</div>");
+
+                        items.push("<div id=\"" + id + "\" class=\"collapse\" data-parent=\"#accordion\">");
+                        items.push("<div class=\"card-body\">");
+
+                        items.push("<ul>");
+                        $.each(product.changes, function (keyc, change) {
+                            items.push("<li>");
+
+                            var docUrl = change.url
+                                .replace("MicrosoftDocs/azure-docs/contents/articles", "")
+                                .replace(".md", "");
+
+                            var fileId = uuidv4();
+
+                            items.push("<a id=\"" + fileId + "\" href=\"https://docs.microsoft.com/en-us/azure" + docUrl + "\">" + change.file + "</a>");
+
+                            $(document).on("click", "[data-target='#" + id + "']", function () {
+                                getTitle("master", change.url, $("#" + fileId));
+                            });
+
+                            items.push(" (");
+
+                            $.each(change.commits, function (keyCommit, commit) {
+                                items.push("<a href=\"https://github.com/MicrosoftDocs/azure-docs/commit/" + commit + "\">Diff</a> ");
+                            });
+
+                            items.push(")</li>");
+                        });
+                        items.push("</ul>");
+
+                        items.push("</div>");
+                        items.push("</div>");
+
+                        items.push("</div>");
+                    });
+                    items.push("</div>");
+                });
+
+                $("<div/>", {
+                    "class": "my-new-list",
+                    html: items.join("")
+                }).appendTo("#results");
+            });
+        });
+
+    </script>
+</body>
+</html>
