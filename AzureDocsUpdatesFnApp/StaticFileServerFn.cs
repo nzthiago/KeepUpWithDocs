@@ -64,7 +64,7 @@ namespace AzureDocsUpdatesFnApp
                     using (var reader = new StreamReader(stream))
                     {
                         var html = await reader.ReadToEndAsync();
-                        html = html.Replace("{{productfilter-options-placeholder}}", GetProductfilterOptions(context.FunctionAppDirectory));
+                       // html = html.Replace("{{productfilter-options-placeholder}}", GetProductfilterOptions(context.FunctionAppDirectory));
 
                         result = new CacheHeaderAction(TimeSpan.FromHours(2), new FileContentResult(Encoding.UTF8.GetBytes(html), new MediaTypeHeaderValue(GetMimeType(filePath)))
                         {

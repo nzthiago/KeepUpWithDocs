@@ -69,9 +69,9 @@
         <div class="row">
             <div class="col-sm-9">
                 Products:
-                <select id="productfilter" class="selectpicker" multiple v-model="selectedProducts">
-                    <option value="all" selected>All</option>
-                    {{productfilter-options-placeholder}}
+                <select id="productfilter" class="selectpicker" multiple v-model="selectedProducts" data-live-search="true">
+                    <option value="all" selected>All Categories</option>
+                    <option v-for="mapping in productMap" :value="mapping.key">{{mapping.value}}</option>
                 </select>
             </div>
             <div class="col-sm-3 subscribe">
@@ -105,7 +105,7 @@
                                 <div class="card-body">
                                     <ul>
                                         <li v-for="change in product.changes">
-                                            <a id="643fd4df-6788-481b-8b68-6728adf4c235"
+                                            <a id="643fd4df-6788-481b-8b68-6728adf4c235"  target="_blank"
                                                v-bind:href="'https://docs.microsoft.com/en-us/azure' + change.url.replace('MicrosoftDocs/azure-docs/contents/articles', '').replace('.md', '')">{{change.title}}</a>
                                             (
                                             <span v-for="(commit, cindex) in change.commits" class="commits">
