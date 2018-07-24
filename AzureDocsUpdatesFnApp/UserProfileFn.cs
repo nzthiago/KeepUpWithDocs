@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -9,24 +10,15 @@ namespace AzureDocsUpdatesFnApp
 {
     public static class UserProfileFn
     {
-        [FunctionName("GetAllUserProfiles")]
-        public static IActionResult GetAllUserProfiles(
-                        [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]HttpRequest req, 
+        [FunctionName("GetAllUserProfilesFn")]
+        public static IActionResult GetAllUserProfilesFn(
+                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, 
                         TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
-
-            int frequency = 0;
-
-            // TODO: Clean up / error handling
-            string f = req.Query["frequency"];
-            if (f != null)
-            {
-                frequency = int.Parse(f);
-            }
-
+            
             UserProfileRepository userProfileRepository = new UserProfileRepository();
-            var userProfileList = userProfileRepository.GetUserProfilesByFrequency(frequency);
+            var userProfileList = userProfileRepository.GetUserProfilesByFrequency();
 
             return new JsonResult(userProfileList);
         }

@@ -41,13 +41,15 @@ namespace AzureDocsUpdatesFnApp.Repositories
             return userProfile;
         }
 
-        public IList<UserProfile> GetUserProfilesByFrequency(int frequency)
+        public IList<UserProfile> GetUserProfilesByFrequency()
         {
             List<UserProfile> userProfiles = new List<UserProfile>();
             var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
-
+            
             var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
-                               where p.NotificationProfile.Frequency == frequency
+                               where p.NotificationProfile.Frequency == 1 |
+                               ( p.NotificationProfile.Frequency == 7 
+                                 && DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
                                select p;
 
             userProfiles = profileQuery.ToList();
