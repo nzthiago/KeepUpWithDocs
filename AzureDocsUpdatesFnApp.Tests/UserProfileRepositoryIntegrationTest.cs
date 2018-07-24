@@ -24,20 +24,19 @@ namespace AzureDocsUpdatesFnApp.Tests
 
             Configuration = builder.Build();
             cosmosDbConnectionString = Configuration["CosmosDb"];
-        }
+         }            
 
         [Fact]
         public void VerifyGetUserProfileById()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
-            var profile = repository.GetUserProfileById("e40b1c7f-70bc-4bab-8c5a-fa87824d58a1");
+            var profile = repository.GetUserProfileById("f5bdc22b-5ecb-4ad4-abc3-412d80b30a36");
 
             Assert.NotNull(profile);
         }
 
-
         [Fact]
-        public async Task VerifyGetUserProfileByEmailAddress()
+        public void VerifyGetUserProfileByEmailAddress()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
 
@@ -60,7 +59,7 @@ namespace AzureDocsUpdatesFnApp.Tests
                 }
             };
 
-            await repository.CreateUserProfile(profile);
+            repository.CreateUserProfile(profile);
 
 
             var profileRetrieved = repository.GetUserProfileByEmailAddress("mcollier@contoso.com");
@@ -86,8 +85,7 @@ namespace AzureDocsUpdatesFnApp.Tests
                     EmailAddress = "mcollier@contoso.com",
                     MobilePhoneNumber = "555-555-1234",
                     WebhookUrl = "https://api.contoso.com/",
-                    Categories = new string[] { "app-service", "cosmos-db" },
-                    Frequency = 1
+                    Categories = new string[] { "app-service", "cosmos-db"}
                 }
             };
 
@@ -99,12 +97,12 @@ namespace AzureDocsUpdatesFnApp.Tests
         public async Task VerifyUpdateUserProfile()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
-            UserProfile profile = repository.GetUserProfileById("e40b1c7f-70bc-4bab-8c5a-fa87824d58a1");
+            UserProfile profile = repository.GetUserProfileById("f5bdc22b-5ecb-4ad4-abc3-412d80b30a36");
 
             profile.NotificationProfile.MobilePhoneNumber = "555-555-1234";
             await repository.UpdateUserProfile(profile);
 
-            UserProfile updatedProfile = repository.GetUserProfileById("e40b1c7f-70bc-4bab-8c5a-fa87824d58a1");
+            UserProfile updatedProfile = repository.GetUserProfileById("f5bdc22b-5ecb-4ad4-abc3-412d80b30a36");
 
             Assert.Equal("555-555-1234", updatedProfile.NotificationProfile.MobilePhoneNumber);
         }
@@ -121,16 +119,6 @@ namespace AzureDocsUpdatesFnApp.Tests
             Assert.NotEmpty(profiles);
 
             Assert.Empty(noProfiles);
-        }
-
-        [Fact]
-        public void VerifyGetAllUserProfiles()
-        {
-            var repository = new UserProfileRepository(cosmosDbConnectionString);
-            var profiles = repository.GetAllUserProfiles(1);
-
-            Assert.NotNull(profiles);
-            Assert.NotEmpty(profiles);
         }
     }
 }
