@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0-beta/css/bootstrap-select.min.css" integrity="sha256-ltg1ohWqXEOuoZcLplrHY1ckfVCdGABdFti+Ox+z/Dk=" crossorigin="anonymous" />
+    <link href="/assets/custom.css" rel="stylesheet">
+    <title>Azure Documentation Updates | User Profile</title>
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Azure Documentation Updates" href="/feed" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+            <div class="container d-flex justify-content-between">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://docs.microsoft.com/en-us/azure/">Documentation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://azure.microsoft.com/en-us/updates/">Azure&nbsp;Updates</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://azure.microsoft.com/en-us/roadmap/">Azure&nbsp;Roadmap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://azure.microsoft.com/en-us/pricing/">Pricing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://azure.microsoft.com/en-us/training/">Training</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://azure.microsoft.com/en-us/blog/">Blog</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="jumbotron jumbotron-fluid header">
+        <div class="container">
+            <div class="row">
+                <div class="col-9">
+                    <h1 class="display-4">
+                        <a href="/">Azure Documentation Updates</a>
+                        <span class="beta">Community Project</span>
+                    </h1>
+                    <p class="lead">Stay current. Always.</p>
+                </div>
+                <div class="col-3 logo">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main role="main" class="container" id="userProfile">
+        <div class="row">
+            <div class="col-sm-9">
+                <form>
+                    <div class="form-group">
+                        <label for="productfilter">Products:</label>
+                        <select id="productfilter" class="selectpicker form-control" multiple data-live-search="true">
+                            <option value="all" selected>All Categories</option>
+                            <!--<option v-for="mapping in productMap" :value="mapping.key">{{mapping.value}}</option>-->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtSubscribedCategories">Subscribed Categories:</label>
+                        <input type="text" id="txtSubscribedCategories" class="form-control" readonly="readonly" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-3 explore">
+                <h3>Explore official resources</h3>
+                <ul class="linkList">
+                    <li>Check out recent Azure releases.<br /><a href="https://azure.microsoft.com/en-us/updates/">Azure updates</a></li>
+                    <li>See where we're heading. Check out upcoming changes to Azure products.<br><a href="https://azure.microsoft.com/en-us/roadmap/">Azure roadmap</a></li>
+                    <li>Hear from experts and developers about the latest Azure news.<br><a href="https://azure.microsoft.com/en-us/blog/">Blog</a></li>
+                    <li>Tell us what you think of Azure and what you want to see in the future.<br><a href="https://feedback.azure.com">Provide feedback</a></li>
+                </ul>
+                <h3>Legend</h3>
+                <p>
+                    Number of changes how many articles have been<br />
+                    <span class="badge badge-success badge-pill">+ added</span><br />
+                    <span class="badge badge-danger badge-pill">- deleted</span><br />
+                    <span class="badge badge-primary badge-pill"># modified</span>
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">
+                Community project from <a href="https://twitter.com/_olli_/" target="_blank">@_olli_</a> and <a href="https://twitter.com/RicardoNiepel/" target="_blank">@RicardoNiepel</a>
+            </span>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js" integrity="sha256-TaLceMwjWRqe4yhbqPOJH6V7UGt5AvvdNfpaIXJWbFU=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha256-5+02zu5UULQkO7w1GIr6vftCgMfFdZcAHeDtFnKZsBs=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0-beta/js/bootstrap-select.min.js" integrity="sha256-A6fr5B6+2H7nPbq0BYIi+Sm/E/R+cVtGzr4ORVbon8M=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/linq.js/2.2.0.2/linq.min.js" integrity="sha256-dq1fzSor46Oc+U/DjuE2hKKN0FfvbVx+CW5GBn1mhiQ=" crossorigin="anonymous"></script>
+    <script src="/assets/app.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function (a) {
+            function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement("script"); b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName("script")[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length;)b("track" + f.pop()); if (b("setAuthenticatedUserContext"), b("clearAuthenticatedUserContext"), b("startTrackEvent"), b("stopTrackEvent"), b("startTrackPage"), b("stopTrackPage"), b("flush"), !a.disableExceptionTracking) { f = "onerror", b("_" + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c["_" + f](a, b, d, e, h), i } } return c
+        }({
+            instrumentationKey: "559686bf-0c25-4ea4-8b7d-df93e6b78794"
+        });
+
+        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView(); 
+
+    </script>
+</body>
+</html>

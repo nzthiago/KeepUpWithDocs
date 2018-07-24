@@ -98,16 +98,6 @@ namespace AzureDocsUpdatesFnApp
             return result;
         }
 
-        private static string GetProductfilterOptions(string functionAppDirectory)
-        {
-            var options = new StringBuilder();
-            foreach (var mapping in ProductTitleRepository.GetMapping(functionAppDirectory).OrderBy(_ => _.Value))
-            {
-                options.Append($"<option value=\"{mapping.Key}\">{mapping.Value}</option>");
-            }
-            return options.ToString();
-        }
-
         private static string GetEnvironmentVariable(string name)
             => System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
 
