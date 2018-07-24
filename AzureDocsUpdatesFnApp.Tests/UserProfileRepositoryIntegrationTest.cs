@@ -1,5 +1,6 @@
 ﻿using AzureDocsUpdatesFnApp.Model;
 using AzureDocsUpdatesFnApp.Repositories;
+using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.IO;
@@ -91,7 +92,9 @@ namespace AzureDocsUpdatesFnApp.Tests
             };
 
             var repository = new UserProfileRepository(cosmosDbConnectionString);
-            await repository.CreateUserProfile(profile);
+            Document createdProfile = await repository.CreateUserProfile(profile);
+
+            Assert.NotNull(createdProfile);
         }
 
         //TODO: Need to fix up this test!
