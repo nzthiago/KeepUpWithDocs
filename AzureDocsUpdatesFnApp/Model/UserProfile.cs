@@ -35,7 +35,7 @@ namespace AzureDocsUpdatesFnApp.Model
         public string[] Categories { get; set; }
 
         [JsonProperty(PropertyName = "frequency")]
-        public string Frequency { get; set; }
+        public int Frequency { get; set; }
 
         [JsonProperty(PropertyName = "emailAddress")]
         public string EmailAddress { get; set; }

@@ -14,7 +14,7 @@ namespace AzureDocsUpdatesFnApp.Tests
     {
         private static IConfiguration Configuration { get; set; }
         private static string cosmosDbConnectionString;
-        
+
         public UserProfileRepositoryIntegrationTest()
         {
             var builder = new ConfigurationBuilder()
@@ -24,7 +24,7 @@ namespace AzureDocsUpdatesFnApp.Tests
 
             Configuration = builder.Build();
             cosmosDbConnectionString = Configuration["CosmosDb"];
-}
+        }
 
         [Fact]
         public async Task VerifyGetUserProfileById()
@@ -55,7 +55,8 @@ namespace AzureDocsUpdatesFnApp.Tests
                     EmailAddress = "mcollier@contoso.com",
                     MobilePhoneNumber = "555-555-1234",
                     WebhookUrl = "https://api.contoso.com/",
-                    Categories = new string[] { "app-service", "cosmos-db" }
+                    Categories = new string[] { "app-service", "cosmos-db" },
+                    Frequency = 1
                 }
             };
 
@@ -85,7 +86,8 @@ namespace AzureDocsUpdatesFnApp.Tests
                     EmailAddress = "mcollier@contoso.com",
                     MobilePhoneNumber = "555-555-1234",
                     WebhookUrl = "https://api.contoso.com/",
-                    Categories = new string[] { "app-service", "cosmos-db"}
+                    Categories = new string[] { "app-service", "cosmos-db" },
+                    Frequency = 1
                 }
             };
 
