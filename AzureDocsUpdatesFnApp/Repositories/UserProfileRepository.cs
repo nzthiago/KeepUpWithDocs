@@ -12,6 +12,9 @@ namespace AzureDocsUpdatesFnApp.Repositories
     public class UserProfileRepository
     {
         private readonly DocumentClient _cosmosDbClient = null; 
+        private static readonly string DatabaseName = "DocsNotification";
+        private static readonly string CollectionName = "UserProfile";
+
 
         public UserProfileRepository()
         {
@@ -27,7 +30,7 @@ namespace AzureDocsUpdatesFnApp.Repositories
         {
             UserProfile userProfile = null;
 
-            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
                           where p.Id == userId
@@ -41,7 +44,7 @@ namespace AzureDocsUpdatesFnApp.Repositories
         public IList<UserProfile> GetUserProfilesByFrequency(int frequency)
         {
             List<UserProfile> userProfiles = new List<UserProfile>();
-            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
                                where p.NotificationProfile.Frequency == frequency
@@ -55,7 +58,7 @@ namespace AzureDocsUpdatesFnApp.Repositories
         public UserProfile GetUserProfileByEmailAddress(string emailAddress)
         {
             UserProfile userProfile = null;
-            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
                                where p.ContactProfile.EmailAddress == emailAddress
@@ -68,7 +71,7 @@ namespace AzureDocsUpdatesFnApp.Repositories
 
         public async Task UpdateUserProfile(UserProfile userProfile)
         {
-            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             var response = await _cosmosDbClient.UpsertDocumentAsync(collectionLink, userProfile);
 
@@ -77,14 +80,14 @@ namespace AzureDocsUpdatesFnApp.Repositories
 
         public async Task CreateUserProfile(UserProfile userProfile)
         {
-            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             Document profileCreated = await _cosmosDbClient.CreateDocumentAsync(collectionLink, userProfile);
         }
 
         public IList<UserProfile> GetUsersByCategory(string category)
         {
-            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+            var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             var categoryQuery = _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink, $"SELECT * FROM c where ARRAY_CONTAINS(c.notificationProfile.categories, '{category}')");
 
