@@ -15,6 +15,7 @@ namespace AzureDocsUpdatesFnApp
     public static class UserProfileFn
     {
         private static UserProfileRepository userProfileRepository = new UserProfileRepository();
+
         [FunctionName("GetAllUserProfilesFn")]
         public static IActionResult GetAllUserProfilesFn(
                         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, 
@@ -22,7 +23,6 @@ namespace AzureDocsUpdatesFnApp
         {
             log.Info("C# HTTP trigger function processed a request.");
             
-            UserProfileRepository userProfileRepository = new UserProfileRepository();
             var userProfileList = userProfileRepository.GetUserProfilesByFrequency();
 
             return new JsonResult(userProfileList);
