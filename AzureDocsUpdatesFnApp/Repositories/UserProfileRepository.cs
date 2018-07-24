@@ -47,9 +47,10 @@ namespace AzureDocsUpdatesFnApp.Repositories
             var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
             
             var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
-                               where p.NotificationProfile.Frequency == 1 |
-                               ( p.NotificationProfile.Frequency == 7 
-                                 && DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                               where (p.NotificationProfile.Frequency == 1)
+                               ||
+                               ((p.NotificationProfile.Frequency == 7) 
+                                && (DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
                                select p;
 
             userProfiles = profileQuery.ToList();
