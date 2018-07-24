@@ -15,24 +15,15 @@ namespace AzureDocsUpdatesFnApp
     public static class UserProfileFn
     {
         private static UserProfileRepository userProfileRepository = new UserProfileRepository();
-
-        [FunctionName("GetAllUserProfiles")]
-        public static IActionResult GetAllUserProfiles(
-                        [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]HttpRequest req,
+        [FunctionName("GetAllUserProfilesFn")]
+        public static IActionResult GetAllUserProfilesFn(
+                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, 
                         TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
-
-            int frequency = 0;
-
-            // TODO: Clean up / error handling
-            string f = req.Query["frequency"];
-            if (f != null)
-            {
-                frequency = int.Parse(f);
-            }
             
-            var userProfileList = userProfileRepository.GetUserProfilesByFrequency(frequency);
+            UserProfileRepository userProfileRepository = new UserProfileRepository();
+            var userProfileList = userProfileRepository.GetUserProfilesByFrequency();
 
             return new JsonResult(userProfileList);
         }
