@@ -11,9 +11,9 @@ namespace AzureDocsUpdatesFnApp.Repositories
 {
     public class UserProfileRepository
     {
-        private readonly DocumentClient _cosmosDbClient = null; 
-        private static readonly string DatabaseName = "DocsNotification";
-        private static readonly string CollectionName = "UserProfile";
+        private readonly DocumentClient _cosmosDbClient = null;
+        private static readonly string DatabaseName = Constants.CosmosDbNames.DocsNotification;
+        private static readonly string CollectionName = Constants.CosmosDbCollections.UserProfile;
 
 
         public UserProfileRepository()

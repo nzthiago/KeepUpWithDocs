@@ -15,13 +15,14 @@ namespace AzureDocsUpdatesFnApp
 
         public class CosmosDbNames
         {
-            public const string AzureDocUpdates = "DocsNotification";
+            public const string DocsNotification = "DocsNotification";
         }
 
         public class CosmosDbCollections
         {
             public const string ChangesPerDay = "ChangesPerDay";
             public const string TitleWorkerStorage = "TitleWorkerStorage";
+            public const string UserProfile = "UserProfile";
         }
 
         public class Queues

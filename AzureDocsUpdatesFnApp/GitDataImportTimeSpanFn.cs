@@ -23,12 +23,12 @@ namespace AzureDocsUpdatesFnApp
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]
                 HttpRequest req,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.ChangesPerDay,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString)]
                 IAsyncCollector<DayInfo> changesPerDayCollection,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.TitleWorkerStorage,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString)]
                 IAsyncCollector<ProcessDayInfoForTitlesJobWorkerData> outputTitleWorkerStorage,
