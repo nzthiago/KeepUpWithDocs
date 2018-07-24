@@ -5,7 +5,8 @@ var data = {
     page: 1,
     dates: 1,
     results: 2,
-    selectedProducts: "all"
+    selectedProducts: "all",
+    productMap:null
 };
 
 function remove(array, element) {
@@ -15,7 +16,7 @@ function remove(array, element) {
 
 var app = new Vue({
     el: '#app',
-    data: data,
+    data: data, 
     watch: {
         selectedProducts: function (newVal, oldVal) {
             if (newVal == oldVal
@@ -32,9 +33,9 @@ var app = new Vue({
                 $('#productfilter').find('option[value=all]').prop('selected', true);
                 $('#productfilter').selectpicker('refresh');
 
-                $(".btn-rss").attr("href", "/feed");
+                $(".btn-rss").attr("href", "https://keepupdocsfunctionapp.azurewebsites.net/feed");
                 data.loading = true;
-                $.getJSON("/api/ChangeFeeed", function (result) {
+                $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ChangeFeeed", function (result) {
                     data.loading = false;
                     data.dates = result;
                 });
@@ -51,15 +52,27 @@ var app = new Vue({
             }
 
             var query = newVal.join(',');
-            $(".btn-rss").attr("href", "/feed?products=" + query);
+            $(".btn-rss").attr("href", "https://keepupdocsfunctionapp.azurewebsites.net/feed?products=" + query);
             data.loading = true;
-            $.getJSON("/api/ChangeFeeed?products=" + query, function (result) {
+            $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ChangeFeeed?products=" + query, function (result) {
                 data.loading = false;
                 data.dates = result;
             });
         }
     },
     methods: {
+        getMaps: function () {
+            console.log("inside get maps");  // this appears in the log
+            $.ajax({
+                url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping',
+                method: 'GET',
+                async: false,
+            }).then(function (response) {
+                data.productMap = response;
+            }).catch(function (err) {
+                console.error(err);
+            });
+        },
         formatDate: function formatDate(date) {
             date = new Date(date);
 
@@ -82,11 +95,14 @@ var app = new Vue({
             }
 
             data.loading = true;
-            $.getJSON("/api/ChangeFeeed?page=" + this.page + "&date=" + getQueryStringValue("date"), function (result) {
+            $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ChangeFeeed?page=" + this.page + "&date=" + getQueryStringValue("date"), function (result) {
                 data.loading = false;
                 data.dates = result;
             });
         }
+    },
+    created: function created() {
+        this.getMaps();
     },
     beforeMount: function beforeMount() {
         this.load();
