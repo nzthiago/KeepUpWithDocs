@@ -23,14 +23,13 @@ namespace AzureDocsUpdatesFnApp.Repositories
             _cosmosDbClient = DocumentDbAccount.Parse(connectionString);
         }
 
-        public async Task<UserProfile> GetUserProfileById(string userId)
+        public UserProfile GetUserProfileById(string userId)
         {
             UserProfile userProfile = null;
 
-            var collection = new DocumentCollection { Id = "UserProfile" };
-            collection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("AzureDocUpdates"), collection)).Resource;
+            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
 
-            var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collection.SelfLink)
+            var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
                           where p.Id == userId
                           select p;
 
@@ -39,14 +38,26 @@ namespace AzureDocsUpdatesFnApp.Repositories
             return userProfile;
         }
 
-        public async Task<UserProfile> GetUserProfileByEmailAddress(string emailAddress)
+        public IList<UserProfile> GetAllUserProfiles(string frequency)
+        {
+            List<UserProfile> userProfiles = new List<UserProfile>();
+            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
+
+            var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
+                               where p.NotificationProfile.Frequency == frequency
+                               select p;
+
+            userProfiles = profileQuery.ToList();
+           
+            return userProfiles;
+        }
+
+        public UserProfile GetUserProfileByEmailAddress(string emailAddress)
         {
             UserProfile userProfile = null;
+            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
 
-            var collection = new DocumentCollection { Id = "UserProfile" };
-            collection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("AzureDocUpdates"), collection)).Resource;
-
-            var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collection.SelfLink)
+            var profileQuery = from p in _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink)
                                where p.ContactProfile.EmailAddress == emailAddress
                                select p;
 
@@ -57,28 +68,25 @@ namespace AzureDocsUpdatesFnApp.Repositories
 
         public async Task UpdateUserProfile(UserProfile userProfile)
         {
-            var collection = new DocumentCollection { Id = "UserProfile" };
-            collection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("AzureDocUpdates"), collection)).Resource;
+            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
 
-            var response = await _cosmosDbClient.UpsertDocumentAsync(collection.SelfLink, userProfile);
+            var response = await _cosmosDbClient.UpsertDocumentAsync(collectionLink, userProfile);
 
             Document upsertedDocument = response.Resource;
         }
 
         public async Task CreateUserProfile(UserProfile userProfile)
         {
-            var collection = new DocumentCollection { Id = "UserProfile" };
-            collection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("AzureDocUpdates"), collection)).Resource;
+            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
 
-            Document profileCreated = await _cosmosDbClient.CreateDocumentAsync(collection.SelfLink, userProfile);
+            Document profileCreated = await _cosmosDbClient.CreateDocumentAsync(collectionLink, userProfile);
         }
 
-        public async Task<IList<UserProfile>> GetUsersByCategory(string category)
+        public IList<UserProfile> GetUsersByCategory(string category)
         {
-            var collection = new DocumentCollection { Id = "UserProfile" };
-            collection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("AzureDocUpdates"), collection)).Resource;
+            var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");
 
-            var categoryQuery = _cosmosDbClient.CreateDocumentQuery<UserProfile>(collection.SelfLink, $"SELECT * FROM c where ARRAY_CONTAINS(c.notificationProfile.categories, '{category}')");
+            var categoryQuery = _cosmosDbClient.CreateDocumentQuery<UserProfile>(collectionLink, $"SELECT * FROM c where ARRAY_CONTAINS(c.notificationProfile.categories, '{category}')");
 
             List<UserProfile> profiles = categoryQuery.ToList<UserProfile>();
 
