@@ -38,7 +38,7 @@ namespace AzureDocsUpdatesFnApp.Repositories
             return userProfile;
         }
 
-        public IList<UserProfile> GetAllUserProfiles(string frequency)
+        public IList<UserProfile> GetAllUserProfiles(int frequency)
         {
             List<UserProfile> userProfiles = new List<UserProfile>();
             var collectionLink = UriFactory.CreateDocumentCollectionUri("AzureDocUpdates", "UserProfile");

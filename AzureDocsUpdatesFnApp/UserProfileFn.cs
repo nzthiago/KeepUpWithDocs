@@ -16,7 +16,7 @@ namespace AzureDocsUpdatesFnApp
             log.Info("C# HTTP trigger function processed a request.");
 
             UserProfileRepository userProfileRepository = new UserProfileRepository();
-            var userProfileList = userProfileRepository.GetAllUserProfiles("1");
+            var userProfileList = userProfileRepository.GetAllUserProfiles(1);
 
             return new JsonResult(userProfileList);
         }
