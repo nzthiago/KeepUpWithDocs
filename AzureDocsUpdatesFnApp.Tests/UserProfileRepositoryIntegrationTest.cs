@@ -14,7 +14,7 @@ namespace AzureDocsUpdatesFnApp.Tests
     {
         private static IConfiguration Configuration { get; set; }
         private static string cosmosDbConnectionString;
-        
+
         public UserProfileRepositoryIntegrationTest()
         {
             var builder = new ConfigurationBuilder()
@@ -24,20 +24,19 @@ namespace AzureDocsUpdatesFnApp.Tests
 
             Configuration = builder.Build();
             cosmosDbConnectionString = Configuration["CosmosDb"];
-}
+         }            
 
         [Fact]
-        public async Task VerifyGetUserProfileById()
+        public void VerifyGetUserProfileById()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
-            var profile = await repository.GetUserProfileById("e40b1c7f-70bc-4bab-8c5a-fa87824d58a1");
+            var profile = repository.GetUserProfileById("f5bdc22b-5ecb-4ad4-abc3-412d80b30a36");
 
             Assert.NotNull(profile);
         }
 
-
         [Fact]
-        public async Task VerifyGetUserProfileByEmailAddress()
+        public void VerifyGetUserProfileByEmailAddress()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
 
@@ -55,14 +54,15 @@ namespace AzureDocsUpdatesFnApp.Tests
                     EmailAddress = "mcollier@contoso.com",
                     MobilePhoneNumber = "555-555-1234",
                     WebhookUrl = "https://api.contoso.com/",
-                    Categories = new string[] { "app-service", "cosmos-db" }
+                    Categories = new string[] { "app-service", "cosmos-db" },
+                    Frequency = 1
                 }
             };
 
-            await repository.CreateUserProfile(profile);
+            repository.CreateUserProfile(profile);
 
 
-            var profileRetrieved = await repository.GetUserProfileByEmailAddress("mcollier@contoso.com");
+            var profileRetrieved = repository.GetUserProfileByEmailAddress("mcollier@contoso.com");
 
             Assert.NotNull(profileRetrieved);
             Assert.Equal("mcollier@contoso.com", profileRetrieved.ContactProfile.EmailAddress);
@@ -97,23 +97,23 @@ namespace AzureDocsUpdatesFnApp.Tests
         public async Task VerifyUpdateUserProfile()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
-            UserProfile profile = await repository.GetUserProfileById("e40b1c7f-70bc-4bab-8c5a-fa87824d58a1");
+            UserProfile profile = repository.GetUserProfileById("f5bdc22b-5ecb-4ad4-abc3-412d80b30a36");
 
             profile.NotificationProfile.MobilePhoneNumber = "555-555-1234";
             await repository.UpdateUserProfile(profile);
 
-            UserProfile updatedProfile = await repository.GetUserProfileById("e40b1c7f-70bc-4bab-8c5a-fa87824d58a1");
+            UserProfile updatedProfile = repository.GetUserProfileById("f5bdc22b-5ecb-4ad4-abc3-412d80b30a36");
 
             Assert.Equal("555-555-1234", updatedProfile.NotificationProfile.MobilePhoneNumber);
         }
 
         [Fact]
-        public async Task VerifyGetUsersByCategory()
+        public void VerifyGetUsersByCategory()
         {
             var repository = new UserProfileRepository(cosmosDbConnectionString);
-            IList<UserProfile> profiles = await repository.GetUsersByCategory("app-service");
+            IList<UserProfile> profiles = repository.GetUsersByCategory("app-service");
 
-            IList<UserProfile> noProfiles = await repository.GetUsersByCategory("jhghjg");
+            IList<UserProfile> noProfiles = repository.GetUsersByCategory("jhghjg");
 
             Assert.NotNull(profiles);
             Assert.NotEmpty(profiles);
