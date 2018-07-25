@@ -81,6 +81,13 @@
                     Subscribe
                 </a>
             </div>
+            <button @click="login" type="button">Login with Microsoft</button>
+            <button @click="logout" type="button">
+                Logout
+            </button>
+            <!--<h3 v-if="user">Hello {{ user.name }}</h3>
+            <pre v-if="userInfo">{{ JSON.stringify(userInfo, null, 4) }}</pre>
+            <p v-if="loginFailed">Login unsuccessful</p>-->
         </div>
         <div class="row results">
             <div class="col-sm-9">
@@ -168,7 +175,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0-beta/js/bootstrap-select.min.js" integrity="sha256-A6fr5B6+2H7nPbq0BYIi+Sm/E/R+cVtGzr4ORVbon8M=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/linq.js/2.2.0.2/linq.min.js" integrity="sha256-dq1fzSor46Oc+U/DjuE2hKKN0FfvbVx+CW5GBn1mhiQ=" crossorigin="anonymous"></script>
     <script src="/assets/app.js"></script>
-
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 
