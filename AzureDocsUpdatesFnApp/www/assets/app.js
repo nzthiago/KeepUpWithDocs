@@ -6,17 +6,20 @@ var data = {
     dates: 1,
     results: 2,
     selectedProducts: "all",
-    productMap:[]
+    productMap: [{ key: "active-directory-b2c", value: "Active Directory B2c" },
+    { key: "active-directory-domain-services", value: "Active Directory Domain Services" },
+    { key: "active-directory-ds", value: "Active Directory Ds" },
+    { key: "active-directory", value: "Active Directory" },
+    { key: "advisor", value: "Advisor" },
+    { key: "aks", value: "Azure Container Service (AKS)" },
+    { key: "analysis-services", value: "Analysis Services" },
+    { key: "ansible", value: "Ansible in Azure" },
+    { key: "api-management", value: "API Management documentation" },
+    { key: "app-service-mobile", value: "App Service Mobile" },
+    { key: "app-service", value: "Web Apps" },
+    { key: "application-gateway", value: "Application Gateway" },
+    { key: "application-insights", value: "Application Insights" }]
 };
-
-var userProfileData = {
-    firstName: null,
-    lastName: null,
-    email: null,
-    selectedCategories: null,
-    frequency: null,
-    productOptions:null
-}
 
 function remove(array, element) {
     const index = array.indexOf(element);
@@ -93,6 +96,13 @@ var app = new Vue({
             }
 
             data.loading = true;
+
+            $.getJSON("api/GetUserProfileByEmailAddress?emailAddress=mthapa@indiana.edu", function (result) {
+                data.loading = false;
+                data.selectedProducts = result.notificationProfile.categories;
+            });
+
+            data.loading = true;
             $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ChangeFeeed?page=" + this.page + "&date=" + getQueryStringValue("date"), function (result) {
                 data.loading = false;
                 data.dates = result;
@@ -112,31 +122,108 @@ var app = new Vue({
     }
 })
 
-//var userProfile = new Vue({
-//    el: '#userProfile',
-//    data: userProfileData,
-//    methods: {
-//        getMaps: function() {
-//            console.log("inside get maps");  // this appears in the log
-//            $.ajax({
-//                url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping',
-//                method: 'GET',
-//                async: false,
-//            }).then(function(response) {
-//                console.log(response +"In data of user profile")
-//                data.productOptions = response;
-//            }).catch(function(err) {
-//                console.error(err);
-//            });
-//        }
-//    },
-//    created: function created() {
-//        this.getMaps();
-//    },
-//    beforeMount: function beforeMount() {
-//        this.load();
-//    }
-//})
+var userProfileData = {
+    loading: false,
+    firstName: null,
+    lastName: null,
+    email: null,
+    selectedCategories: "",
+    frequency: 0,
+    productOptions: [{ key: "active-directory-b2c", value: "Active Directory B2c" },
+    { key: "active-directory-domain-services", value: "Active Directory Domain Services" },
+    { key: "active-directory-ds", value: "Active Directory Ds" },
+    { key: "active-directory", value: "Active Directory" },
+    { key: "advisor", value: "Advisor" },
+    { key: "aks", value: "Azure Container Service (AKS)" },
+    { key: "analysis-services", value: "Analysis Services" },
+    { key: "ansible", value: "Ansible in Azure" },
+    { key: "api-management", value: "API Management documentation" },
+    { key: "app-service-mobile", value: "App Service Mobile" },
+    { key: "app-service", value: "Web Apps"},
+    { key: "application-gateway", value: "Application Gateway"},
+    { key: "application-insights", value: "Application Insights"}],
+    errors: []
+}
+
+var userProfile = new Vue({
+    el: '#userProfile',
+    data: userProfileData,
+    methods: {
+        getUserProfile: function () {
+            var self = this;
+            self.loading = true;
+            $.getJSON("api/GetUserProfileByEmailAddress?emailAddress=mthapa@indiana.edu", function (result) {
+                console.log(result)
+                self.loading = false;
+                self.firstName = result.contactProfile.firstName;
+                self.lastName = result.contactProfile.lastName;
+                self.email = result.contactProfile.emailAddress;
+                self.frequency = result.notificationProfile.frequency;
+                self.selectedCategories = result.notificationProfile.categories;
+            });
+        },
+        load: function () {
+            var _this = this;
+            _this.loading = true;
+             $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping", function (result) {
+
+                _this.loading = false;
+                _this.productOptions = result;
+            });
+        },
+        upsertUserProfile: function () {
+            
+            if (this.firstName && this.lastName && this.email && this.selectedCategories != "" && this.frequency != 0) {
+                var user = {
+                    ContactProfile: { EmailAddress: this.email, FirstName: this.firstName, LastName: this.lastName },
+                    NotificationProfile: { Categories: this.selectedCategories, Frequency: this.frequency, EmailAddress: this.email }
+                }
+                $.ajax({
+                    //url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/UpsertUserProfile',
+                    url: '/api/UpsertUserProfile',
+                    method: 'PUT',
+                    data: JSON.stringify(user),
+                async: false,
+                }).then(function (response) {
+                    window.location.href = "/index.html"
+            }).catch(function(err) {
+                console.error(err);
+            });
+            }
+
+            this.errors = [];
+
+            if (!this.firstName) {
+                this.errors.push('First Name required.');
+            }
+
+            if (!this.lastName) {
+                this.errors.push('Last Name required.');
+            }
+
+            if (!this.email) {
+                this.errors.push('Email required.');
+            }
+
+            if (this.frequency == 0) {
+                this.errors.push('Frequency required.');
+            }
+
+            if (this.selectedCategories == "") {
+                this.errors.push("Select a product category")
+            }
+        }
+    },
+    created: function created() {
+        this.load();
+    },
+    beforeMount: function beforeMount() {
+        this.load();
+        },
+    mounted: function () {
+        this.getUserProfile();
+    }
+})
 
 function getQueryStringValue(key) {
     return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));

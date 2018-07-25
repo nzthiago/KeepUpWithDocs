@@ -27,6 +27,9 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
+                            <a class="nav-link" href="/index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="https://docs.microsoft.com/en-us/azure/">Documentation</a>
                         </li>
                         <li class="nav-item">
@@ -43,6 +46,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="https://azure.microsoft.com/en-us/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/userprofile.html">My&nbsp;Account</a>
                         </li>
                     </ul>
                 </div>
@@ -67,37 +73,50 @@
     </div>
 
     <main role="main" class="container" id="userProfile">
+        <h3><b>Update user subscription</b></h3>
+        <hr>
+        <p v-if="errors.length">
+            <b style="color:red;">Please correct the following error(s):</b>
+            <ul>
+                <li style="color:red;" v-for="error in errors">{{ error }}</li>
+            </ul>
+        </p>
         <div class="row">
             <div class="col-sm-9">
+
                 <form id="formUserProfile">
                     <div class="form-group">
                         <label for="txtFirstName">First Name:</label>
-                        <input type="text" class="form-control" id="txtFirstName" />
+                        <input required type="text" class="form-control" id="txtFirstName" v-model="firstName" :value="firstName" />
                     </div>
                     <div class="form-group">
                         <label for="txtLastName">Last Name:</label>
-                        <input type="text" class="form-control" id="txtLastName" />
+                        <input required type="text" class="form-control" v-model="lastName" id="txtLastName" />
                     </div>
                     <div class="form-group">
                         <label for="txtEmail">Email:</label>
-                        <input type="text" class="form-control" id="txtEmail" />
+                        <input required type="text" class="form-control" id="txtEmail" v-model="email" />
                     </div>
                     <div class="form-group">
                         <label for="productfilter">Products:</label>
-                        <select id="productfilter" class="selectpicker form-control" multiple data-live-search="true">
-                            <option v-for="prod in productOptions" :value="prod.key">{{prod.value}}</option>
+                        <select id="productfilter" class="selectpicker form-control" multiple data-live-search="true" v-model="selectedCategories">
+                            <option value="">select a product category</option>
+                            <option v-for="prod in productOptions" v-bind:value="prod.key">
+                                {{prod.value}}
+                            </option>
+                            <!--<option v-for="prod in productOptions" :value="prod.key">{{prod.value}}</option>-->
                         </select>
                     </div>
                     <div class="form-group" id="frequency">
                         Frequency:
-                        <input type="radio" id="daily" value="1" name="frequency">
+                        <input type="radio" id="daily" value="1" v-model="frequency" name="frequency">
                         <label for="daily">Daily Once</label>
                         &nbsp;
-                        <input type="radio" id="weekly" value="7" name="frequency">
+                        <input type="radio" id="weekly" value="7" v-model="frequency" name="frequency">
                         <label for="weekly">Weekly Once</label>
                     </div>
                     <div class="form-group">
-                        <input type="submit" id="btnSave" class="form-control btn-primary btn-sm btn-default" value="Save"/>
+                        <button v-on:click.prevent="upsertUserProfile()" id="btnSave" class="form-control btn-primary btn-sm btn-default">Save</button>
                     </div>
                 </form>
             </div>
