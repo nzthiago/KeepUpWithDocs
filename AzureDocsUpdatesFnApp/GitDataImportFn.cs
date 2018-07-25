@@ -19,12 +19,12 @@ namespace AzureDocsUpdatesFnApp
                 RunOnStartup = false)]
                 TimerInfo myTimer,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.ChangesPerDay,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString)]
                 IAsyncCollector<DayInfo> changesPerDayCollection,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.TitleWorkerStorage,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString)]
                 IAsyncCollector<ProcessDayInfoForTitlesJobWorkerData> outputTitleWorkerStorage,

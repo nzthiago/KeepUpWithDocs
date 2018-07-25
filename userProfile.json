@@ -1,0 +1,19 @@
+{
+    "id": "1234567",
+    "contactProfile": {
+        "emailAddress": "",
+        "mobilePhoneNumber": "",
+        "firstName": "",
+        "lastName": ""
+    },
+    "notificationProfile": {
+        "categories": [
+            "",
+            ""
+        ],
+        "frequency": "P1M",
+        "emailAddress": "",
+        "webhookUrl": "",
+        "mobilePhoneNumber": ""
+    }
+}

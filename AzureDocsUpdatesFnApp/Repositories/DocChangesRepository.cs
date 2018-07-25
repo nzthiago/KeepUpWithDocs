@@ -27,7 +27,7 @@ namespace AzureDocsUpdatesFnApp.Repositories
         public async Task<DocumentCollection> GetFileChangesCollectionAsync()
         {
             DocumentCollection documentCollection = new DocumentCollection { Id = "ChangesPerDay" };
-            documentCollection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("AzureDocUpdates"), documentCollection)).Resource;
+            documentCollection = (await _cosmosDbClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(Constants.CosmosDbNames.DocsNotification), documentCollection)).Resource;
             documentCollection.IndexingPolicy = new IndexingPolicy(new RangeIndex(DataType.String) { Precision = -1 });
             await _cosmosDbClient.ReplaceDocumentCollectionAsync(documentCollection);
 

@@ -25,24 +25,24 @@ namespace AzureDocsUpdatesFnApp
                 Connection = Constants.AppProperties.AzureStorageQueueConnectionString)]
                 ProcessDayInfoForTitlesJob inputQueueItem,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.TitleWorkerStorage,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString,
                 Id = "{id}")]
                 ProcessDayInfoForTitlesJobWorkerData titlesJobWorkerData,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.TitleWorkerStorage,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString)]
                 IAsyncCollector<ProcessDayInfoForTitlesJobWorkerData> outgogingTitlesJobWorkerData,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates, 
+                Constants.CosmosDbNames.DocsNotification, 
                 Constants.CosmosDbCollections.ChangesPerDay, 
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString, 
                 Id = "{id}")]
                 DayInfo incomingDayInfo,
             [CosmosDB(
-                Constants.CosmosDbNames.AzureDocUpdates,
+                Constants.CosmosDbNames.DocsNotification,
                 Constants.CosmosDbCollections.ChangesPerDay,
                 ConnectionStringSetting = Constants.AppProperties.CosmosDbConnectionString)]
                 IAsyncCollector<DayInfo> outgoingDayInfos,
