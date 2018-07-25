@@ -6,8 +6,17 @@ var data = {
     dates: 1,
     results: 2,
     selectedProducts: "all",
-    productMap:null
+    productMap:[]
 };
+
+var userProfileData = {
+    firstName: null,
+    lastName: null,
+    email: null,
+    selectedCategories: null,
+    frequency: null,
+    productOptions:null
+}
 
 function remove(array, element) {
     const index = array.indexOf(element);
@@ -61,18 +70,7 @@ var app = new Vue({
         }
     },
     methods: {
-        getMaps: function () {
-            console.log("inside get maps");  // this appears in the log
-            $.ajax({
-                url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping',
-                method: 'GET',
-                async: false,
-            }).then(function (response) {
-                data.productMap = response;
-            }).catch(function (err) {
-                console.error(err);
-            });
-        },
+        
         formatDate: function formatDate(date) {
             date = new Date(date);
 
@@ -101,13 +99,44 @@ var app = new Vue({
             });
         }
     },
-    created: function created() {
-        this.getMaps();
+    created: function() {
+        var _this = this;
+        _this.loading = true;
+         $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping", function(result) {
+             _this.loading = false;
+             _this.productMap = result;
+            });
     },
     beforeMount: function beforeMount() {
         this.load();
     }
 })
+
+//var userProfile = new Vue({
+//    el: '#userProfile',
+//    data: userProfileData,
+//    methods: {
+//        getMaps: function() {
+//            console.log("inside get maps");  // this appears in the log
+//            $.ajax({
+//                url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping',
+//                method: 'GET',
+//                async: false,
+//            }).then(function(response) {
+//                console.log(response +"In data of user profile")
+//                data.productOptions = response;
+//            }).catch(function(err) {
+//                console.error(err);
+//            });
+//        }
+//    },
+//    created: function created() {
+//        this.getMaps();
+//    },
+//    beforeMount: function beforeMount() {
+//        this.load();
+//    }
+//})
 
 function getQueryStringValue(key) {
     return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));

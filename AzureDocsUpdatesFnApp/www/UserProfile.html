@@ -69,17 +69,35 @@
     <main role="main" class="container" id="userProfile">
         <div class="row">
             <div class="col-sm-9">
-                <form>
+                <form id="formUserProfile">
+                    <div class="form-group">
+                        <label for="txtFirstName">First Name:</label>
+                        <input type="text" class="form-control" id="txtFirstName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtLastName">Last Name:</label>
+                        <input type="text" class="form-control" id="txtLastName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtEmail">Email:</label>
+                        <input type="text" class="form-control" id="txtEmail" />
+                    </div>
                     <div class="form-group">
                         <label for="productfilter">Products:</label>
                         <select id="productfilter" class="selectpicker form-control" multiple data-live-search="true">
-                            <option value="all" selected>All Categories</option>
-                            <!--<option v-for="mapping in productMap" :value="mapping.key">{{mapping.value}}</option>-->
+                            <option v-for="prod in productOptions" :value="prod.key">{{prod.value}}</option>
                         </select>
                     </div>
+                    <div class="form-group" id="frequency">
+                        Frequency:
+                        <input type="radio" id="daily" value="1" name="frequency">
+                        <label for="daily">Daily Once</label>
+                        &nbsp;
+                        <input type="radio" id="weekly" value="7" name="frequency">
+                        <label for="weekly">Weekly Once</label>
+                    </div>
                     <div class="form-group">
-                        <label for="txtSubscribedCategories">Subscribed Categories:</label>
-                        <input type="text" id="txtSubscribedCategories" class="form-control" readonly="readonly" />
+                        <input type="submit" id="btnSave" class="form-control btn-primary btn-sm btn-default" value="Save"/>
                     </div>
                 </form>
             </div>
@@ -91,13 +109,6 @@
                     <li>Hear from experts and developers about the latest Azure news.<br><a href="https://azure.microsoft.com/en-us/blog/">Blog</a></li>
                     <li>Tell us what you think of Azure and what you want to see in the future.<br><a href="https://feedback.azure.com">Provide feedback</a></li>
                 </ul>
-                <h3>Legend</h3>
-                <p>
-                    Number of changes how many articles have been<br />
-                    <span class="badge badge-success badge-pill">+ added</span><br />
-                    <span class="badge badge-danger badge-pill">- deleted</span><br />
-                    <span class="badge badge-primary badge-pill"># modified</span>
-                </p>
             </div>
         </div>
     </main>
