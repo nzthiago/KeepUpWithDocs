@@ -29,7 +29,7 @@ namespace AzureDocsUpdatesFnApp
         }
 
         [FunctionName("UpsertProfileFn")]
-        public static async Task<IActionResult> UpsertUserProfile([HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]HttpRequest req,
+        public static async Task<IActionResult> UpsertUserProfile([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)]HttpRequest req,
                             TraceWriter log)
         {
             log.Info("Attempting to upsert a user profile.");
