@@ -72,13 +72,15 @@ namespace AzureDocsUpdatesFnApp.Repositories
             return userProfile;
         }
 
-        public async Task UpdateUserProfile(UserProfile userProfile)
+        public async Task<Document> UpdateUserProfile(UserProfile userProfile)
         {
             var collectionLink = UriFactory.CreateDocumentCollectionUri(DatabaseName, CollectionName);
 
             var response = await _cosmosDbClient.UpsertDocumentAsync(collectionLink, userProfile);
 
             Document upsertedDocument = response.Resource;
+
+            return upsertedDocument;
         }
 
         public async Task<Document> CreateUserProfile(UserProfile userProfile)

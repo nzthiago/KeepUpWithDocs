@@ -28,21 +28,39 @@ namespace AzureDocsUpdatesFnApp
             return new JsonResult(userProfileList);
         }
 
-        [FunctionName("CreateProfileFn")]
-        public static async Task<IActionResult> CreateUserProfile([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]HttpRequest req,
+        [FunctionName("UpsertProfile")]
+        public static async Task<IActionResult> UpsertUserProfile([HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]HttpRequest req,
                             TraceWriter log)
         {
-            log.Info("Attempting to create a new user profile.");
+            log.Info("Attempting to upsert a user profile.");
 
             string requestBody = new StreamReader(req.Body).ReadToEnd();
             var up = JsonConvert.DeserializeObject<UserProfile>(requestBody);
 
-            Document createdProfile = await userProfileRepository.CreateUserProfile(up);
+            Document profile = await userProfileRepository.UpdateUserProfile(up);
 
-            log.Info($"Created new user profile with document ID '{createdProfile.Id}'.");
+            log.Info($"Upserted user profile with document ID '{profile.Id}'.");
 
             // TODO: Fix this to provide a better location URI
-            return new CreatedResult($"{createdProfile.Id}", createdProfile);
+            return new CreatedResult($"{profile.Id}", profile);
+        }
+
+        [FunctionName("GetUserProfileByEmailFn")]
+        public static UserProfile GetUserProfileByEmailAddress(
+                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req,
+                        TraceWriter log)
+        {
+            UserProfile profile = null;
+
+            log.Info("Attempting to retrieve profile for user by email address.");
+
+            string emailAddress = req.Query["emailAddress"];
+            if (!string.IsNullOrEmpty(emailAddress))
+            {
+                profile = userProfileRepository.GetUserProfileByEmailAddress(emailAddress);
+            }
+
+            return profile;
         }
     }
 }
