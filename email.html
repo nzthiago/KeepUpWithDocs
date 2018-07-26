@@ -1,0 +1,20 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>Azure Documentation Updates | Microsoft Azure</title> </head> <body>
+    <h1>Azure Documentation Updates</h1>
+    <div id="{PRODUCT_NAME}"> <!--there will be multiple of these "div"s, one per product-->
+        <h3>
+            {PRODUCT_NAME}
+        </h3>
+        <ul>
+            <li> <!--there will be multiple of these "li"s, one per document-->
+                {DATE}: <a href="{DOCUMENT_URL}">{DOCUMENT_TITLE}</a>
+                (
+                <a target="_blank" href="{DOCUMENT_URL}" style="color:blue">Diff</a> <!--use this to calculate url in function: https://github.com/nzthiago/KeepUpWithDocs/blob/master/AzureDocsUpdatesFnApp/www/index.html#L126-->
+                )
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 
 var graphApiEndpoint = "https://graph.microsoft.com/v1.0/me";
 var graphAPIScopes = ["https://graph.microsoft.com/user.read"];
+
 var loggedInUser = null;
 
 var msalconfig = {
@@ -22,6 +23,7 @@ window.onload = function () {
     if (!userAgentApplication.isCallback(window.location.hash) && window.parent === window && !window.opener) {
         var user = userAgentApplication.getUser();
         if (user || window.location.href.includes("userprofile.html")) {
+
             callGraphApi();
         }
     }
@@ -192,9 +194,9 @@ var app = new Vue({
     },
     methods: {
         getMaps: function () {
-            console.log("inside get maps");  // this appears in the log
+            console.log("inside get maps");  
             $.ajax({
-                url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping',
+                url: 'https://keepingupwithdocs.azurewebsites.net/api/ProductMapping',
                 method: 'GET',
                 async: false,
             }).then(function (response) {
@@ -231,7 +233,7 @@ var app = new Vue({
             //});
 
             data.loading = true;
-            $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ChangeFeeed?page=" + this.page + "&date=" + getQueryStringValue("date"), function (result) {
+            $.getJSON("https://keepingupwithdocs.azurewebsites.net/api/ChangeFeeed?page=" + this.page + "&date=" + getQueryStringValue("date"), function (result) {
                 data.loading = false;
                 data.dates = result;
             });
