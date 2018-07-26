@@ -1,12 +1,13 @@
-﻿<!doctype html>
-<html lang="en">
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0-beta/css/bootstrap-select.min.css" integrity="sha256-ltg1ohWqXEOuoZcLplrHY1ckfVCdGABdFti+Ox+z/Dk=" crossorigin="anonymous" />
     <link href="/assets/custom.css" rel="stylesheet">
-    <title>Azure Documentation Updates | Microsoft Azure</title>
+    <title>Azure Documentation Updates | User Profile</title>
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for Azure Documentation Updates" href="/feed" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -71,82 +72,52 @@
         </div>
     </div>
 
-    <main role="main" class="container" id="app">
-
-    <!--<button id="callGraphButton" type="button" class="btn btn-primary" onclick="callGraphApi()">Call Microsoft Graph API</button>
-
-    <div id="errorMessage" class="text-danger"></div>
-    <div class="hidden">
-        <h3>Graph API Call Response</h3>
-        <pre class="well" id="graphResponse"></pre>
-    </div>
-    <div class="hidden">
-        <h3>Access Token</h3>
-        <pre class="well" id="accessToken"></pre>
-    </div>
-    <div class="hidden">
-        <h3>ID Token Claims</h3>
-        <pre class="well" id="userInfo"></pre>
-    </div>
-    <button id="signOutButton" type="button" class="btn btn-primary hidden" onclick="signOut()">Sign out</button>-->
-
+    <main role="main" class="container" id="userProfile">
+        <h3><b>Update user subscription</b></h3>
+        <hr>
+        <p v-if="errors.length">
+            <b style="color:red;">Please correct the following error(s):</b>
+            <ul>
+                <li style="color:red;" v-for="error in errors">{{ error }}</li>
+            </ul>
+        </p>
         <div class="row">
             <div class="col-sm-9">
-                    Products:
-                <select id="productfilter" class="selectpicker" multiple v-model="selectedProducts" data-live-search="true">
-                    <option value="all" selected>All Categories</option>
-                    <option v-for="prod in productMap" v-bind:value="prod.key">
-                        {{prod.value}}
-                    </option>
-                </select>
-            </div>
-            <div class="col-sm-3 subscribe">
-                <a class="btn btn-rss" href="/feed" role="button"
-                   rel="alternate" type="application/rss+xml">
-                    <i class="fa fa-rss"></i>
-                    Subscribe
-                </a>
-            </div>
-        </div>
-        <div class="row results">
-            <div class="col-sm-9">
-                <div v-if="loading" class="loading-indicator">Loading...</div>
-                <div v-for="(date, dindex) in dates" v-if="!loading">
-                    <h2>{{formatDate(date.changedAtDate)}}</h2>
-                    <div id="accordion">
-                        <div class="card" v-for="(product, pindex) in date.products">
-                            <div class="card-header">
-                                <h5 class="mb-0">
-                                    <span class="counter">
-                                        <span v-if="product.added > 0" class="badge badge-success badge-pill">+{{product.added}}</span>
-                                        <span v-if="product.deleted > 0" class="badge badge-danger badge-pill">-{{product.deleted}}</span>
-                                        <span v-if="product.modified > 0" class="badge badge-primary badge-pill">#{{product.modified}}</span>
-                                    </span>
-                                    <button class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#' + dindex + '-' + pindex" aria-expanded="true" v-bind:aria-controls="dindex + '-' + pindex">
-                                        {{product.product}}
-                                    </button>
-                                </h5>
-                            </div>
-                            <div v-bind:id="dindex + '-' + pindex" class="collapse" data-parent="#accordion">
-                                <div class="card-body">
-                                    <ul>
-                                        <li v-for="change in product.changes">
-                                            <a id="643fd4df-6788-481b-8b68-6728adf4c235"  target="_blank"
-                                               v-bind:href="'https://docs.microsoft.com/en-us/azure' + change.url.replace('MicrosoftDocs/azure-docs/contents/articles', '').replace('.md', '')">{{change.title}}</a>
-                                            (
-                                            <span v-for="(commit, cindex) in change.commits" class="commits">
-                                                <a v-bind:class="{ added: commit.status == 1, deleted: commit.status == 3, modified: commit.status == 2 }"
-                                                   target="_blank"
-                                                   v-bind:href="'https://github.com/MicrosoftDocs/azure-docs/commit/' + commit.sha + (commit.deepLink ? '?short_path=' + commit.deepLink.substring(0, 7) + '#diff-' + commit.deepLink : '')">Diff</a><span v-if="cindex+1 < change.commits.length">, </span>
-                                            </span>
-                                            )
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+
+                <form id="formUserProfile">
+                    <div class="form-group">
+                        <label for="txtFirstName">First Name:</label>
+                        <input required type="text" class="form-control" id="txtFirstName" v-model="firstName" :value="firstName" />
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="txtLastName">Last Name:</label>
+                        <input required type="text" class="form-control" v-model="lastName" id="txtLastName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtEmail">Email:</label>
+                        <input required type="text" class="form-control" id="txtEmail" v-model="email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="productfilter">Products:</label>
+                        <select id="productfilter" class="selectpicker form-control" multiple data-live-search="true" v-model="selectedCategories">
+                            <option value="">select a product category</option>
+                            <option v-for="prod in productOptions" v-bind:value="prod.key">
+                                {{prod.value}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="frequency">
+                        Frequency:
+                        <input type="radio" id="daily" value="1" v-model="frequency" name="frequency">
+                        <label for="daily">Daily Once</label>
+                        &nbsp;
+                        <input type="radio" id="weekly" value="7" v-model="frequency" name="frequency">
+                        <label for="weekly">Weekly Once</label>
+                    </div>
+                    <div class="form-group">
+                        <button v-on:click.prevent="upsertUserProfile()" id="btnSave" class="form-control btn-primary btn-sm btn-default">Save</button>
+                    </div>
+                </form>
             </div>
             <div class="col-sm-3 explore">
                 <h3>Explore official resources</h3>
@@ -156,26 +127,9 @@
                     <li>Hear from experts and developers about the latest Azure news.<br><a href="https://azure.microsoft.com/en-us/blog/">Blog</a></li>
                     <li>Tell us what you think of Azure and what you want to see in the future.<br><a href="https://feedback.azure.com">Provide feedback</a></li>
                 </ul>
-                <h3>Legend</h3>
-                <p>
-                    Number of changes how many articles have been<br />
-                    <span class="badge badge-success badge-pill">+ added</span><br />
-                    <span class="badge badge-danger badge-pill">- deleted</span><br />
-                    <span class="badge badge-primary badge-pill"># modified</span>
-                </p>
-            </div>
-        </div>
-        <div class="row paging">
-            <div class="col-sm-9">
-                <a v-bind:class="{ current: page == 1 }" href="?page=1">1</a> |
-                <a v-bind:class="{ current: page == 2 }" href="?page=2">2</a> |
-                <a v-bind:class="{ current: page == 3 }" href="?page=3">3</a>
-            </div>
-            <div class="col-sm-3">
             </div>
         </div>
     </main>
-
     <footer class="footer">
         <div class="container">
             <span class="text-muted">
@@ -193,12 +147,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0-beta/js/bootstrap-select.min.js" integrity="sha256-A6fr5B6+2H7nPbq0BYIi+Sm/E/R+cVtGzr4ORVbon8M=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/linq.js/2.2.0.2/linq.min.js" integrity="sha256-dq1fzSor46Oc+U/DjuE2hKKN0FfvbVx+CW5GBn1mhiQ=" crossorigin="anonymous"></script>
-
     <!-- The 'bluebird' and 'fetch' references below are required if you need to run this application on Internet Explorer -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
     <script src="https://secure.aadcdn.microsoftonline-p.com/lib/0.1.5/js/msal.min.js"></script>
-
     <script src="/assets/app.js"></script>
 
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
@@ -212,7 +164,7 @@
         });
 
         window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
-    </script>
 
+    </script>
 </body>
 </html>

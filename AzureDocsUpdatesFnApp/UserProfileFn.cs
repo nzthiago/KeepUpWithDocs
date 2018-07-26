@@ -18,7 +18,7 @@ namespace AzureDocsUpdatesFnApp
 
         [FunctionName("GetAllUserProfilesFn")]
         public static IActionResult GetAllUserProfilesFn(
-                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, 
+                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/GetAllUserProfiles")]HttpRequest req, 
                         TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
@@ -29,7 +29,8 @@ namespace AzureDocsUpdatesFnApp
         }
 
         [FunctionName("UpsertProfileFn")]
-        public static async Task<IActionResult> UpsertUserProfile([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)]HttpRequest req,
+        public static async Task<IActionResult> UpsertUserProfile([HttpTrigger(AuthorizationLevel.Function, "put", Route = "api/UpsertUserProfile")]HttpRequest req,
+
                             TraceWriter log)
         {
             log.Info("Attempting to upsert a user profile.");
@@ -47,7 +48,7 @@ namespace AzureDocsUpdatesFnApp
 
         [FunctionName("GetUserProfileByEmailFn")]
         public static UserProfile GetUserProfileByEmailAddress(
-                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req,
+                        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/GetUserProfileByEmailAddress")]HttpRequest req,
                         TraceWriter log)
         {
             UserProfile profile = null;

@@ -3,6 +3,8 @@
 var graphApiEndpoint = "https://graph.microsoft.com/v1.0/me";
 var graphAPIScopes = ["https://graph.microsoft.com/user.read"];
 
+var loggedInUser = null;
+
 var msalconfig = {
     clientID: "05cbebd2-ea3b-47c3-bcd2-ff409ad7bc38",
     redirectUri: location.origin
@@ -20,36 +22,37 @@ window.onload = function () {
     // If page is refreshed, continue to display user info
     if (!userAgentApplication.isCallback(window.location.hash) && window.parent === window && !window.opener) {
         var user = userAgentApplication.getUser();
-        if (user) {
+        if (user || window.location.href.includes("userprofile.html")) {
+
             callGraphApi();
         }
     }
 }
 
 function callGraphApi() {
-    var user = userAgentApplication.getUser();
-    if (!user) {
+    loggedInUser = userAgentApplication.getUser();
+    if (!loggedInUser) {
         userAgentApplication.loginRedirect(graphAPIScopes);
     } else {
-        var userInfoElement = document.getElementById("userInfo");
-        userInfoElement.parentElement.classList.remove("hidden");
-        userInfoElement.innerHTML = JSON.stringify(user, null, 4);
+        //var userInfoElement = document.getElementById("userInfo");
+        //userInfoElement.parentElement.classList.remove("hidden");
+        //userInfoElement.innerHTML = JSON.stringify(loggedInUser, null, 4);
 
-        document.getElementById("signOutButton").classList.remove("hidden");
+        //document.getElementById("signOutButton").classList.remove("hidden");
 
-        var graphCallResponseElement = document.getElementById("graphResponse");
-        graphCallResponseElement.parentElement.classList.remove("hidden");
-        graphCallResponseElement.innerText = "Calling Graph ...";
+        //var graphCallResponseElement = document.getElementById("graphResponse");
+        //graphCallResponseElement.parentElement.classList.remove("hidden");
+        //graphCallResponseElement.innerText = "Calling Graph ...";
 
-        userAgentApplication.acquireTokenSilent(graphAPIScopes)
-            .then(function (token) {
-                callWebApiWithToken(graphApiEndpoint, token, graphCallResponseElement, document.getElementById("accessToken"));
+        //userAgentApplication.acquireTokenSilent(graphAPIScopes)
+        //    .then(function (token) {
+        //        callWebApiWithToken(graphApiEndpoint, token, graphCallResponseElement, document.getElementById("accessToken"));
 
-            }, function (error) {
-                if (error) {
-                    userAgentApplication.acquireTokenRedirect(graphAPIScopes);
-                }
-            });
+        //    }, function (error) {
+        //        if (error) {
+        //            userAgentApplication.acquireTokenRedirect(graphAPIScopes);
+        //        }
+        //    });
 
     }
 }
@@ -123,7 +126,19 @@ var data = {
     dates: 1,
     results: 2,
     selectedProducts: "all",
-    productMap:null
+    productMap: [{ key: "active-directory-b2c", value: "Active Directory B2c" },
+    { key: "active-directory-domain-services", value: "Active Directory Domain Services" },
+    { key: "active-directory-ds", value: "Active Directory Ds" },
+    { key: "active-directory", value: "Active Directory" },
+    { key: "advisor", value: "Advisor" },
+    { key: "aks", value: "Azure Container Service (AKS)" },
+    { key: "analysis-services", value: "Analysis Services" },
+    { key: "ansible", value: "Ansible in Azure" },
+    { key: "api-management", value: "API Management documentation" },
+    { key: "app-service-mobile", value: "App Service Mobile" },
+    { key: "app-service", value: "Web Apps" },
+    { key: "application-gateway", value: "Application Gateway" },
+    { key: "application-insights", value: "Application Insights" }]
 };
 
 function remove(array, element) {
@@ -133,7 +148,7 @@ function remove(array, element) {
 
 var app = new Vue({
     el: '#app',
-    data: data, 
+    data: data,
     watch: {
         selectedProducts: function (newVal, oldVal) {
             if (newVal == oldVal
@@ -211,6 +226,12 @@ var app = new Vue({
                 this.page = 1;
             }
 
+            //data.loading = true;
+            //$.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/GetUserProfileByEmailAddress?emailAddress=mthapa@indiana.edu", function (result) {
+            //    data.loading = false;
+            //    data.selectedProducts = result.notificationProfile.categories;
+            //});
+
             data.loading = true;
             $.getJSON("https://keepingupwithdocs.azurewebsites.net/api/ChangeFeeed?page=" + this.page + "&date=" + getQueryStringValue("date"), function (result) {
                 data.loading = false;
@@ -218,11 +239,129 @@ var app = new Vue({
             });
         }
     },
-    created: function created() {
-        this.getMaps();
+    created: function () {
+        var _this = this;
+        _this.loading = true;
+        $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping", function (result) {
+            _this.loading = false;
+            _this.productMap = result;
+        });
     },
     beforeMount: function beforeMount() {
         this.load();
+    }
+})
+
+var userProfileData = {
+    loading: false,
+    firstName: null,
+    lastName: null,
+    email: null,
+    selectedCategories: "",
+    frequency: 0,
+    productOptions: [{ key: "active-directory-b2c", value: "Active Directory B2c" },
+    { key: "active-directory-domain-services", value: "Active Directory Domain Services" },
+    { key: "active-directory-ds", value: "Active Directory Ds" },
+    { key: "active-directory", value: "Active Directory" },
+    { key: "advisor", value: "Advisor" },
+    { key: "aks", value: "Azure Container Service (AKS)" },
+    { key: "analysis-services", value: "Analysis Services" },
+    { key: "ansible", value: "Ansible in Azure" },
+    { key: "api-management", value: "API Management documentation" },
+    { key: "app-service-mobile", value: "App Service Mobile" },
+    { key: "app-service", value: "Web Apps" },
+    { key: "application-gateway", value: "Application Gateway" },
+    { key: "application-insights", value: "Application Insights" }],
+    errors: []
+}
+
+var userProfile = new Vue({
+    el: '#userProfile',
+    data: userProfileData,
+    methods: {
+        getUserProfile: function () {
+            var self = this;
+
+            self.loading = true;
+            var user = userAgentApplication.getUser();
+            if (user) {
+                console.log("Before mount")
+                console.log(user)
+                self.loading = false;
+                self.email = user.displayableId;
+                self.firstName = user.name.split(" ")[0];
+                self.lastName = user.name.split(" ")[1];
+
+            }
+
+            $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/GetUserProfileByEmailAddress?emailAddress=" + self.email, function (result) {
+                if (result) {
+                    self.loading = false;
+                    self.firstName = result.contactProfile.firstName;
+                    self.lastName = result.contactProfile.lastName;
+                    self.email = result.contactProfile.emailAddress;
+                    self.frequency = result.notificationProfile.frequency;
+                    self.selectedCategories = result.notificationProfile.categories;
+                }
+            });
+        },
+        load: function () {
+            var _this = this;
+            _this.loading = true;
+            $.getJSON("https://keepupdocsfunctionapp.azurewebsites.net/api/ProductMapping", function (result) {
+                _this.loading = false;
+                _this.productOptions = result;
+            });
+        },
+        upsertUserProfile: function () {
+            if (this.firstName && this.lastName && this.email && this.selectedCategories != "" && this.frequency != 0) {
+                var user = {
+                    ContactProfile: { EmailAddress: this.email, FirstName: this.firstName, LastName: this.lastName },
+                    NotificationProfile: { Categories: this.selectedCategories, Frequency: this.frequency, EmailAddress: this.email }
+                }
+                $.ajax({
+                    url: 'https://keepupdocsfunctionapp.azurewebsites.net/api/UpsertUserProfile',
+                    method: 'PUT',
+                    data: JSON.stringify(user),
+                    async: false,
+                }).then(function (response) {
+                    window.location.href = "/index.html"
+                }).catch(function (err) {
+                    console.error(err);
+                });
+            }
+
+            this.errors = [];
+
+            if (!this.firstName) {
+                this.errors.push('First Name required.');
+            }
+
+            if (!this.lastName) {
+                this.errors.push('Last Name required.');
+            }
+
+            if (!this.email) {
+                this.errors.push('Email required.');
+            }
+
+            if (this.frequency == 0) {
+                this.errors.push('Frequency required.');
+            }
+
+            if (this.selectedCategories == "") {
+                this.errors.push("Select a product category")
+            }
+        }
+    },
+    created: function created() {
+        this.load();
+    },
+    beforeMount: function beforeMount() {
+        this.load();
+    },
+    mounted: function () {
+        this.getUserProfile();
     }
 })
 
