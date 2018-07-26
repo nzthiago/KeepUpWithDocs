@@ -1,4 +1,6 @@
 ﻿/// <reference path="vue.js" />
+/// <reference path="authService.js" />
+import AuthService from './authService';
 
 var graphApiEndpoint = "https://graph.microsoft.com/v1.0/me";
 var graphAPIScopes = ["https://graph.microsoft.com/user.read"];
@@ -123,7 +125,8 @@ var data = {
     dates: 1,
     results: 2,
     selectedProducts: "all",
-    productMap:null
+    productMap: null,
+    user: null
 };
 
 function remove(array, element) {
@@ -174,7 +177,7 @@ var app = new Vue({
             $.getJSON("https://keepingupwithdocs.azurewebsites.net/api/ChangeFeeed?products=" + query, function (result) {
                 data.loading = false;
                 data.dates = result;
-            });
+          });
         }
     },
     methods: {
@@ -189,6 +192,23 @@ var app = new Vue({
             }).catch(function (err) {
                 console.error(err);
             });
+        },
+        login: function () {
+            var authService = new AuthService();
+            console.log('test login');
+            this.authService.login().then(
+              user => {
+                console.log('Logged in user: {0}', user);
+                if (user) {
+                  this.user = user;
+                }
+              }
+            );
+        },
+        logout: function () {
+          var authService = new AuthService();
+          console.log('test logout');
+          authService.logout();
         },
         formatDate: function formatDate(date) {
             date = new Date(date);
@@ -219,7 +239,8 @@ var app = new Vue({
         }
     },
     created: function created() {
-        this.getMaps();
+      this.getMaps();
+      // this.authService = new AuthService();
     },
     beforeMount: function beforeMount() {
         this.load();
