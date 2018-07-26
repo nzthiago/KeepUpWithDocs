@@ -104,7 +104,6 @@
                             <option v-for="prod in productOptions" v-bind:value="prod.key">
                                 {{prod.value}}
                             </option>
-                            <!--<option v-for="prod in productOptions" :value="prod.key">{{prod.value}}</option>-->
                         </select>
                     </div>
                     <div class="form-group" id="frequency">
@@ -148,6 +147,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.0-beta/js/bootstrap-select.min.js" integrity="sha256-A6fr5B6+2H7nPbq0BYIi+Sm/E/R+cVtGzr4ORVbon8M=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/linq.js/2.2.0.2/linq.min.js" integrity="sha256-dq1fzSor46Oc+U/DjuE2hKKN0FfvbVx+CW5GBn1mhiQ=" crossorigin="anonymous"></script>
+    <!-- The 'bluebird' and 'fetch' references below are required if you need to run this application on Internet Explorer -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+    <script src="https://secure.aadcdn.microsoftonline-p.com/lib/0.1.5/js/msal.min.js"></script>
     <script src="/assets/app.js"></script>
 
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
@@ -160,7 +163,7 @@
             instrumentationKey: "559686bf-0c25-4ea4-8b7d-df93e6b78794"
         });
 
-        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView(); 
+        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
 
     </script>
 </body>
